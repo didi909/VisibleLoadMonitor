@@ -1,0 +1,7 @@
+# database source
+[db]
+host = 192.168.2.22
+port = 3306
+user = root
+pass = oracle
+dbname = ywdb

@@ -1,0 +1,194 @@
+<html>  
+    <head>  
+        <!-- 引入 echarts.js -->  
+        <script type="text/javascript" src="http://echarts.baidu.com/dist/echarts.js"></script>  
+        <!-- 引入jquery.js -->  
+        <script type="text/javascript" src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+    </head>  
+    <body>  
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->  
+        <div id="main" style="width: 1200px;height:700px;"></div>
+    </body>  
+    <script type="text/javascript">  
+        var a = echarts;  
+        var myChart = a.init(document.getElementById('main'));  
+         // 显示标题，图例和空的坐标轴  
+         myChart.setOption({
+             backgroundColor: new echarts.graphic.RadialGradient(0.3, 0.3, 0.8, [{
+                offset: 0,
+                color: '#f7f8fa'
+            }, {
+                offset: 1,
+                color: '#cdd0d5'
+            }]),
+            title: {
+                text: '1990 与 2015 年各国家人均寿命与 GDP'
+            },
+            legend: {
+                right: 10,
+                data: ['1990', '2015']
+            },
+            xAxis: {
+//                data : [],  //这里如果加上的话，效果就是x轴会显示所有的数据点，不加则是固定间隔的刻度
+                type : 'value',
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed'
+                    }
+                }
+            },
+            yAxis: {
+//                data : [],
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed'
+                    }
+                },
+                scale: true}
+            ,
+            series: [{
+//                name: '1990',
+//                data: [],
+                type: 'scatter',
+//                symbolSize: 30  //设置点大小
+//                ,
+//                itemStyle: {
+//                    normal: {
+//                        shadowBlur: 10,
+//                        shadowColor: 'rgba(120, 36, 50, 0.5)',
+//                        shadowOffsetY: 5,
+//                        color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
+//                            offset: 0,
+//                            color: 'rgb(251, 118, 123)'
+//                        }, {
+//                            offset: 1,
+//                            color: 'rgb(204, 46, 72)'
+//                        }])
+//                    }
+//                }
+            }]
+//            series: [{
+//                name: '1990',
+//                data: data[0],
+//                type: 'scatter',
+//                symbolSize: function (data) {
+//                    return Math.sqrt(data[2]) / 5e2;
+//                },
+//                label: {
+//                    emphasis: {
+//                        show: true,
+//                        formatter: function (param) {
+//                            return param.data[3];
+//                        },
+//                        position: 'top'
+//                    }
+//                },
+//                itemStyle: {
+//                    normal: {
+//                        shadowBlur: 10,
+//                        shadowColor: 'rgba(120, 36, 50, 0.5)',
+//                        shadowOffsetY: 5,
+//                        color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
+//                            offset: 0,
+//                            color: 'rgb(251, 118, 123)'
+//                        }, {
+//                            offset: 1,
+//                            color: 'rgb(204, 46, 72)'
+//                        }])
+//                    }
+//                }
+//            }, {
+//                name: '2015',
+//                data: data[1],
+//                type: 'scatter',
+//                symbolSize: function (data) {
+//                    return Math.sqrt(data[2]) / 5e2;
+//                },
+//                label: {
+//                    emphasis: {
+//                        show: true,
+//                        formatter: function (param) {
+//                            return param.data[3];
+//                        },
+//                        position: 'top'
+//                    }
+//                },
+//                itemStyle: {
+//                    normal: {
+//                        shadowBlur: 10,
+//                        shadowColor: 'rgba(25, 100, 150, 0.5)',
+//                        shadowOffsetY: 5,
+//                        color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
+//                            offset: 0,
+//                            color: 'rgb(129, 227, 238)'
+//                        }, {
+//                            offset: 1,
+//                            color: 'rgb(25, 183, 207)'
+//                        }])
+//                    }
+//                }
+//            }]
+         });  
+         myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画  
+         var nums=[];    //数量
+         var age=[];     //年龄
+         var sizes=[];    //圈圈的大小
+         var country=[];    //国家
+         var year=[];   //年份
+
+         $.ajax({  
+         type : "get",  
+//       async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）  
+         url : "http://127.0.0.1:5000/echarts1",    //请求发送到Servlet处
+//       data : {},  
+         dataType : "json",        //返回数据形式为json  
+         success : function(result) {  
+             //请求成功时执行该函数内容，result即为服务器返回的json对象  
+             if (result) {  
+//              alert(result["data"]);  
+                    for(var i=0;i<result["data"].length;i++){  
+//                      alert(result["data"][i]["name"]);  
+                       nums.push(result["data"][i][0]);    //挨个取出名称并填入类别数组
+                     }  
+                    for(var i=0;i<result["data"].length;i++){  
+//                      alert(result["data"][i]["num"]);  
+                        age.push(result["data"][i][1]);    //挨个取出数量并填入销量数组
+                      }
+                    for(var i=0;i<result["data"].length;i++){
+//                      alert(result["data"][i]["num"]);
+                        sizes.push(result["data"][i][2]);    //挨个取出数量并填入销量数组
+                      }
+                    for(var i=0;i<result["data"].length;i++){
+//                      alert(result["data"][i]["num"]);
+                        country.push(result["data"][i][3]);    //挨个取出数量并填入销量数组
+                      }
+                    for(var i=0;i<result["data"].length;i++){
+//                      alert(result["data"][i]["num"]);
+                        year.push(result["data"][i][4]);    //挨个取出数量并填入销量数组
+                      }
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption({        //加载数据图表
+                        xAxis: {
+                            data: nums
+                        },
+                        yAxis: {
+                            data: age
+                        },
+                        series: [{
+                            // 根据名字对应到相应的系列
+                            name: '1990',  //右上角名称
+                            data: year
+                        }]
+                    });
+  
+             }  
+  
+        },  
+         error : function(errorMsg) {  
+             //请求失败时执行该函数  
+         alert("图表请求数据失败!");  
+         myChart.hideLoading();  
+         }  
+    })  
+    </script>  
+</html>

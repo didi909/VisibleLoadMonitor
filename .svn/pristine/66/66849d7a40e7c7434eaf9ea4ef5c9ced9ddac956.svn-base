@@ -1,0 +1,359 @@
+<html>
+<head>
+    <!-- 引入 echarts.js -->
+    <!--<script type="text/javascript" src="http://echarts.baidu.com/dist/echarts.js"></script>  -->
+    <script type="text/javascript" src="D:\Projects\PyProjects\Project1\echarts.js"></script>
+    <!-- 引入jquery.js -->
+    <!--<script type="text/javascript" src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>-->
+    <script type="text/javascript" src="D:\Projects\PyProjects\Project1\jquery.min.js"></script>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="width: 1200px;height:700px;"></div>
+<div id="main1" style="width: 1200px;height:700px;"></div>
+</body>
+<script type="text/javascript">
+
+    //定义上下滑动折叠效果
+//    $(document).ready(function () {
+//            $("button").click(function () {
+//                $("div").slideToggle();
+//            });
+//        for (var i = 1;i<5;i++) {
+//            if (i%2==0) {
+//                $("div").slideToggle();
+//            }
+//            sleep(1000)
+//        }
+//    });
+
+</script>
+
+<script type="text/javascript">
+    function sleep(numberMillis) {
+        var now = new Date();
+        var exitTime = now.getTime() + numberMillis;
+        while (true) {
+            now = new Date();
+            if (now.getTime() > exitTime) {
+                return;
+            }
+        }
+    }
+    //定义远程调用
+    var a = echarts;
+    var myChart = a.init(document.getElementById('main'));
+
+    var data = [];
+    var data2 = [];
+    //这里似乎是一个和x轴起始时间有关的一个变量，而+new Date可以获取到毫秒
+    var now = +new Date(1998, 8, 3);
+    var now1 = +new Date(1998, 8, 3);
+    //一天有24小时、3600秒、1000毫秒
+    var oneDay = 24 * 3600 * 1000;
+    var oneHour = 3600 * 1000;
+    var oneMin = 60 * 1000;
+    var oneSec = 1000;
+    //这里是y轴数据
+    var value = Math.random();
+    var value2 = Math.random();
+
+//    document.write(JSON.stringify(data2) + "<br />");
+    //main页面初始化
+//    myChart.setOption({
+    option = {
+        title: {
+            text: '动态数据 + 时间坐标轴'
+        },
+        tooltip: {
+//                trigger: 'axis',
+//                //下面定义返回坐标竖线上面的数据格式和内容
+//                formatter: function (params) {
+//                    params = params[0];
+//                    var date = new Date(params.name);
+//                    return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ' / ' + params.value[1]*100+'%';
+////                    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+//                },
+                axisPointer: {
+                    animation: false
+                }
+        },
+        legend: {
+            data: ['模拟数据1', '模拟数据2']
+        },
+        xAxis: {
+            type: 'time',
+            splitLine: {
+                show: false
+            }
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, '100%'],
+            splitLine: {
+                show: false
+            },
+//                定义y轴刻度标签为百分比
+            axisLabel: {
+                formatter: function (val) {
+                    return (val) * 100 + '%';
+                }
+            },
+            max: 1
+        },
+        series: [{
+            name: '模拟数据1',
+            type: 'line',
+            showSymbol: false,
+            hoverAnimation: false,
+            data: data2
+        }]
+    };
+
+    //main1页面初始化
+    var a = echarts;
+    var myChart4 = a.init(document.getElementById('main1'));
+    var data4 = [];
+
+    var dataAll = [
+    [
+        [10.0, 8.04],
+        [8.0, 6.95],
+        [13.0, 7.58],
+        [9.0, 8.81],
+        [11.0, 8.33],
+        [14.0, 9.96],
+        [6.0, 7.24],
+        [4.0, 4.26],
+        [12.0, 10.84],
+        [7.0, 4.82],
+        [5.0, 5.68]
+    ],
+    [
+        [10.0, 9.14],
+        [8.0, 8.14],
+        [13.0, 8.74],
+        [9.0, 8.77],
+        [11.0, 9.26],
+        [14.0, 8.10],
+        [6.0, 6.13],
+        [4.0, 3.10],
+        [12.0, 9.13],
+        [7.0, 7.26],
+        [5.0, 4.74]
+    ],
+    [
+        [10.0, 7.46],
+        [8.0, 6.77],
+        [13.0, 12.74],
+        [9.0, 7.11],
+        [11.0, 7.81],
+        [14.0, 8.84],
+        [6.0, 6.08],
+        [4.0, 5.39],
+        [12.0, 8.15],
+        [7.0, 6.42],
+        [5.0, 5.73]
+    ],
+    [
+        [8.0, 6.58],
+        [8.0, 5.76],
+        [8.0, 7.71],
+        [8.0, 8.84],
+        [8.0, 8.47],
+        [8.0, 7.04],
+        [8.0, 5.25],
+        [19.0, 12.50],
+        [8.0, 5.56],
+        [8.0, 7.91],
+        [8.0, 6.89]
+    ]
+];
+
+    var markLineOpt = {
+        animation: false,
+        label: {
+            normal: {
+                formatter: 'y = 0.5 * x + 3',
+                textStyle: {
+                    align: 'right'
+                }
+            }
+        },
+        lineStyle: {
+            normal: {
+                type: 'solid'
+            }
+        },
+        tooltip: {
+            formatter: 'y = 0.5 * x + 3'
+        },
+        data: [[{
+            coord: [0, 3],
+            symbol: 'none'
+        }, {
+            coord: [20, 13],
+            symbol: 'none'
+        }]]
+    };
+
+//    document.write(JSON.stringify(data4) + "<br />");
+
+    option1 = {
+        title: {
+            text: 'Anscombe\'s quartet',
+            x: 'center',
+            y: 0
+        },
+        legend: {
+            data: ['CPU']
+        },
+        grid: [
+            {x: '7%', y: '7%', width: '38%', height: '38%'},
+            {x2: '7%', y: '7%', width: '38%', height: '38%'},
+            {x: '7%', y2: '7%', width: '38%', height: '38%'},
+            {x2: '7%', y2: '7%', width: '38%', height: '38%'}
+        ],
+        tooltip: {
+            formatter: 'Group {a}: ({c})'
+        },
+        xAxis: [
+            {gridIndex: 0, type: 'time'},
+            {gridIndex: 1, min: 0, max: 40,type: 'time'},
+            {gridIndex: 2, min: 0, max: 40,type: 'time'},
+            {gridIndex: 3, min: 0, max: 40,type: 'time'}
+        ],
+        yAxis: [
+            {
+                gridIndex: 0,
+                type: 'value',
+                boundaryGap: [0, '100%'],
+                axisLabel: {
+                    formatter: function (val) {
+                        return (val) * 100 + '%';
+                    }
+                },
+                max: 1},
+            {gridIndex: 1, min: 0, max: 15},
+            {gridIndex: 2, min: 0, max: 15},
+            {gridIndex: 3, min: 0, max: 15}
+        ],
+        series: [
+            {
+                name: 'I',
+                type: 'line',
+                xAxisIndex: 0,
+                yAxisIndex: 0,
+                data: data4
+            },
+            {
+                name: 'II',
+                type: 'scatter',
+                xAxisIndex: 1,
+                yAxisIndex: 1,
+                data: dataAll[1],
+                markLine: markLineOpt
+            },
+            {
+                name: 'III',
+                type: 'scatter',
+                xAxisIndex: 2,
+                yAxisIndex: 2,
+                data: dataAll[2],
+                markLine: markLineOpt
+            },
+            {
+                name: 'IV',
+                type: 'scatter',
+                xAxisIndex: 3,
+                yAxisIndex: 3,
+                data: dataAll[3],
+                markLine: markLineOpt
+            }
+        ]
+    };
+
+    myChart.setOption(option)
+    setInterval(function() {
+        $.ajax({
+            type: "get",
+    //       async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url: "http://127.0.0.1:5000/echarts1",    //请求发送到Servlet处
+    //       data : {},
+            dataType: "json",        //返回数据形式为json
+            success: function (result) {
+                //请求成功时执行该函数内容，result即为服务器返回的json对象
+                if (result) {
+                    for (var i = 0; i < result["data"].length; i++) {
+    //                      alert(result["data"][i]["name"]);
+                        if (data2.length > 12 )  //x轴设置12个间隔点
+                            data2.shift()
+                        data2.push(result["data"][i]);    //挨个取出名称并填入类别数组
+                    }
+
+//                    myChart.hideLoading();    //隐藏加载动画
+//                    myChart.setOption({
+
+                    myChart.setOption({
+                        series: [{
+                            name: '模拟数据1',
+                            type: 'line',
+                            data: data2
+                        }]
+                    });
+                }
+            },
+            error: function (errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        })
+    },5000);
+
+    myChart4.setOption(option1);
+    setInterval(function() {
+        $.ajax({
+            type: "get",
+    //       async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url: "http://127.0.0.1:5000/echarts1",    //请求发送到Servlet处
+    //       data : {},
+            dataType: "json",        //返回数据形式为json
+            success: function (result) {
+                //请求成功时执行该函数内容，result即为服务器返回的json对象
+                if (result) {
+                    for (var i = 0; i < result["data"].length; i++) {
+    //                      alert(result["data"][i]["name"]);
+                        if (data4.length > 12 )  //x轴设置12个间隔点
+                            data4.shift()
+                        data4.push(result["data"][i]);    //挨个取出名称并填入类别数组
+                    }
+
+//                    myChart.hideLoading();    //隐藏加载动画
+                    myChart4.setOption({
+                        series: [{
+                            name: '模拟数据1',
+                            type: 'line',
+                            data: data4
+                        }]
+                    });
+                }
+            },
+            error: function (errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        })
+    },5000);
+
+    // 初始化时隐藏一张
+    $("div#main1").slideToggle();
+//    定时滑动展示
+    setInterval(function() {
+        $("div#main").slideToggle();
+        $("div#main1").slideToggle();
+    },8000);
+
+</script>
+</html>

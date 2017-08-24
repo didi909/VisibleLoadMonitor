@@ -1,0 +1,171 @@
+<html>  
+    <head>  
+        <!-- 引入 echarts.js -->  
+        <!--<script type="text/javascript" src="http://echarts.baidu.com/dist/echarts.js"></script>  -->
+        <script type="text/javascript" src="D:\Projects\PyProjects\Project1\echarts.js"></script>
+        <!-- 引入jquery.js -->
+        <!--<script type="text/javascript" src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>-->
+        <script type="text/javascript" src="D:\Projects\PyProjects\Project1\jquery.min.js"></script>
+    </head>  
+    <body>  
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->  
+        <div id="main" style="width: 1200px;height:700px;"></div>
+    </body>  
+    <script type="text/javascript">
+        //定义远程调用
+        var a = echarts;  
+        var myChart = a.init(document.getElementById('main'));
+
+        //用于补足时间数据的 分和秒数据
+        function checkTime(i)
+        {
+        if (i<10)
+          {i="0" + i}
+          return i
+        }
+
+        function randomData() {
+            now = new Date(+now + oneSec);
+//            value = value + Math.random() * 21 - 10;
+            value = Math.random()
+//            while (value > 1)
+//            {
+//                value = value2 - 1;
+//            }
+//            document.write(now.toString()+','+[now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/')+','+Math.round(value));
+            return {
+                name: now.toString(),
+                value: [
+                    [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/')+' '+[now.getHours(),checkTime(now.getMinutes()),checkTime(now.getSeconds())].join(':'),
+//                    [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/')+' '+[now.getHours(),checkTime(now.getMinutes())].join(':'),
+//                    [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
+//                    Math.round(value)
+                    value.toFixed(2)
+                ]
+            }
+        }
+
+        function randomData2() {
+            now1 = new Date(+now1 + oneSec);
+//            value2 = value2 + Math.random() * 23 - 10;
+            value2 = Math.random();
+//            while (value2 > 1)
+//            {
+//                value2 = value2 - 1;
+//            }
+//            document.write(now1.toString()+','+[now1.getFullYear(), now1.getMonth() + 1, now1.getDate()].join('/')+','+Math.round(value2));
+            return {
+                name: now1.toString(),
+                value: [
+                    [now1.getFullYear(), now1.getMonth() + 1, now1.getDate()].join('/')+' '+[now1.getHours(),checkTime(now1.getMinutes()),checkTime(now1.getSeconds())].join(':'),
+//                    [now1.getFullYear(), now1.getMonth() + 1, now1.getDate()].join('/')+' '+[now1.getHours(),checkTime(now1.getMinutes())].join(':'),
+//                    [now1.getFullYear(), now1.getMonth() + 1, now1.getDate()].join('/'),
+//                    Math.round(value2)
+                    value2.toFixed(2)
+                ]
+            }
+        }
+
+        var data = [];
+        var data2 = [];
+        //这里似乎是一个和x轴起始时间有关的一个变量，而+new Date可以获取到毫秒
+        var now = +new Date(1998, 8, 3);
+        var now1 = +new Date(1998, 8, 3);
+        //一天有24小时、3600秒、1000毫秒
+        var oneDay = 24 * 3600 * 1000;
+        var oneHour = 3600 * 1000;
+        var oneMin = 60 * 1000;
+        var oneSec = 1000;
+        //这里是y轴数据
+        var value = Math.random()  ;
+        var value2 = Math.random()  ;
+        //这里的i定义x轴的长度，例如 i< 10000定义了横轴横跨10000天
+        for (var i = 0; i < 100; i++) {
+            data.push(randomData());
+            data2.push(randomData2());
+        }
+//  现在需要改造的点：
+//        1.x轴改为以秒为单位 -- done
+//        2.y轴改为百分比，100%最大 -- done
+
+
+        document.write(JSON.stringify(data)+ "<br />");
+
+        myChart.setOption  ({
+            title: {
+                text: '动态数据 + 时间坐标轴'
+            },
+            tooltip: {
+//                trigger: 'axis',
+//                //下面定义返回坐标竖线上面的数据格式和内容
+//                formatter: function (params) {
+//                    params = params[0];
+//                    var date = new Date(params.name);
+//                    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+//                },
+//                axisPointer: {
+//                    animation: false
+//                }
+            },
+            legend: {
+                data:['模拟数据1','模拟数据2']
+            },
+            xAxis: {
+                type: 'time',
+                splitLine: {
+                    show: false
+                }
+            },
+            yAxis: {
+                type: 'value',
+                boundaryGap: [0, '100%'],
+                splitLine: {
+                    show: false
+                },
+//                定义y轴刻度标签为百分比
+                axisLabel: {
+                    formatter: function (val) {
+                        return (val) * 100 + '%';
+                    }
+                },
+                max : 1
+            },
+            series: [{
+                name: '模拟数据1',
+                type: 'line',
+                showSymbol: false,
+                hoverAnimation: false,
+                data : data
+            },{
+                name: '模拟数据2',
+                type: 'line',
+                showSymbol: false,
+                hoverAnimation: false,
+                data : data2
+            }]
+        });
+
+        setInterval(function () {
+            //i<n 定义了x轴间隔，例如i<10表示横轴每个点间隔10天，1秒刷新一次
+//            for (var i = 0; i < 10; i++) {
+                data.shift();
+                data.push(randomData());
+                data2.shift();
+                data2.push(randomData2());
+//            }
+
+            myChart.setOption({
+                series: [{
+                    name: '模拟数据1',
+                    type: 'line',
+                    data: data
+                },{
+                    name: '模拟数据2',
+                    type: 'line',
+                    data: data2
+                }]
+            });
+        }, 1000);   //这里的1000是刷新时间间隔，单位毫秒
+
+    </script>  
+</html>

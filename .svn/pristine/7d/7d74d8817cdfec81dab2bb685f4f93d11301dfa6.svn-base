@@ -1,0 +1,169 @@
+<html>
+<head>
+    <!-- 引入 echarts.js -->
+    <!--<script type="text/javascript" src="http://echarts.baidu.com/dist/echarts.js"></script>  -->
+    <script type="text/javascript" src="D:\Projects\PyProjects\Project1\echarts.js"></script>
+    <!-- 引入jquery.js -->
+    <!--<script type="text/javascript" src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>-->
+    <script type="text/javascript" src="D:\Projects\PyProjects\Project1\jquery.min.js"></script>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="width: 1200px;height:700px;"></div>
+<!--<div id="main1" style="width: 1200px;height:700px;"></div>-->
+</body>
+<script type="text/javascript">
+
+    //定义上下滑动折叠效果
+//    $(document).ready(function () {
+//            $("button").click(function () {
+//                $("div").slideToggle();
+//            });
+//        for (var i = 1;i<5;i++) {
+//            if (i%2==0) {
+//                $("div").slideToggle();
+//            }
+//            sleep(1000)
+//        }
+//    });
+
+</script>
+
+<script type="text/javascript">
+    function sleep(numberMillis) {
+        var now = new Date();
+        var exitTime = now.getTime() + numberMillis;
+        while (true) {
+            now = new Date();
+            if (now.getTime() > exitTime) {
+                return;
+            }
+        }
+    }
+    //定义远程调用
+    var a = echarts;
+    var myChart = a.init(document.getElementById('main'));
+
+    var data = [];
+    var data2 = [];
+    //这里似乎是一个和x轴起始时间有关的一个变量，而+new Date可以获取到毫秒
+    var now = +new Date(1998, 8, 3);
+    var now1 = +new Date(1998, 8, 3);
+    //一天有24小时、3600秒、1000毫秒
+    var oneDay = 24 * 3600 * 1000;
+    var oneHour = 3600 * 1000;
+    var oneMin = 60 * 1000;
+    var oneSec = 1000;
+    //这里是y轴数据
+    var value = Math.random();
+    var value2 = Math.random();
+
+//    document.write(JSON.stringify(data2) + "<br />");
+    //main页面初始化
+//    myChart.setOption({
+    option = {
+        title: {
+            text: '动态数据 + 时间坐标轴'
+        },
+        tooltip: {
+//                trigger: 'axis',
+//                //下面定义返回坐标竖线上面的数据格式和内容
+//                formatter: function (params) {
+//                    params = params[0];
+//                    var date = new Date(params.name);
+//                    return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ' / ' + params.value[1]*100+'%';
+////                    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+//                },
+                axisPointer: {
+                    animation: false
+                }
+        },
+        legend: {
+            data: ['模拟数据1', '模拟数据2']
+        },
+        xAxis: {
+            type: 'time',
+            splitLine: {
+                show: false
+            }
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, '100%'],
+            splitLine: {
+                show: false
+            },
+//                定义y轴刻度标签为百分比
+            axisLabel: {
+                formatter: function (val) {
+                    return (val) * 100 + '%';
+                }
+            },
+            max: 1
+        },
+        series: [{
+            name: '模拟数据1',
+            type: 'line',
+            showSymbol: false,
+            hoverAnimation: false,
+            data: data2
+        }]
+    };
+
+    //main1页面初始化
+
+    myChart.setOption(option)
+    setInterval(function() {
+        $.ajax({
+            type: "get",
+    //       async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url: "http://127.0.0.1:5000/echarts1",    //请求发送到Servlet处
+    //       data : {},
+            dataType: "json",        //返回数据形式为json
+            success: function (result) {
+                //请求成功时执行该函数内容，result即为服务器返回的json对象
+                if (result) {
+                    for (var i = 0; i < result["data"].length; i++) {
+    //                      alert(result["data"][i]["name"]);
+                        if (data2.length > 12 )  //x轴设置12个间隔点
+                            data2.shift()
+                        data2.push(result["data"][i]);    //挨个取出名称并填入类别数组
+                    }
+
+//                    myChart.hideLoading();    //隐藏加载动画
+//                    myChart.setOption({
+
+                    myChart.setOption({
+                        series: [{
+                            name: '模拟数据1',
+                            type: 'line',
+                            data: data2
+                        }]
+                    });
+                }
+            },
+            error: function (errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        })
+    },5000);
+
+//    $("div#main1").slideToggle();
+//    定时滑动展示
+    setInterval(function() {
+//        var r = 1
+//        if (r%2==1){
+//            $("div#main").slideToggle();
+//        }
+//        var ssDiv
+//        var jzDiv
+        $("div#main").slideToggle();
+//        $("div#main1").slideToggle();
+//    $("div#main").slideToggle();
+    },8000);
+//    $("div#main").slideToggle();
+
+</script>
+</html>
